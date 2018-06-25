@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Fingerprint Test</string>
+    <string name="authenticated_message">You are now authenticated!</string>
+    <string name="main_username_hint">Username</string>
+    <string name="main_password_hint">Password</string>
+    <string name="main_fingerprint_icon_content_description">Fingerprint icon</string>
+    <string name="main_login_btn_label">Login</string>
+    <string name="main_register_btn_label">Register</string>
+    <string name="back_title">Back</string>
+    <string name="main_warning_dialog_title">Warning</string>
+    <string name="main_regular_login_dialog_message">Proceed to log in via regular form</string>
+    <string name="main_close_dialog_positive_button">Close</string>
+    <string name="main_error_dialog_title">Error</string>
+    <string name="main_incorrect_username_password_dialog_message">Username/password incorrect</string>
+    <string name="main_fingerprint_dialog_title">Fingerprint Authentication</string>
+    <string name="main_fingerprint_dialog_message">You can now place your finger into the sensor in order to Authenticate to Android OS</string>
+    <string name="main_errors_registration_dialog_message">There were errors during registration process. Try it again</string>
+    <string name="main_register_complete_dialog_title">Register complete</string>
+    <string name="main_register_complete_dialog_message">You have successfully registered</string>
+    <string name="main_empty_username_password_dialog_message">You must enter a valid username/password</string>
+    <string name="main_low_android_version_dialog_message">Android version should be higher than/equals to Marshmallow (6)</string>
+    <string name="main_fingerprint_permission_missing_dialog_message">You should grant Fingerprint permission to this app in order to log in with your fingerprint</string>
+    <string name="main_no_fingerprint_device_dialog_message">Your hardware does not have any fingerprint sensor. You cannot use this feature</string>
+    <string name="main_no_secure_lockscreen_set_dialog_message">In order to use fingerprint sensor login, your lock screen should be secure (i.e.: Add a pattern)</string>
+    <string name="main_regular_register_dialog_message">Proceed to register via regular form (without keystore)</string>
+</resources>
