@@ -6,7 +6,11 @@ A simple app to try KeyStore and fingerprint (API) sensor on Android devices
 Any comment will be welcome.
 
 Enjoy!
- 
+
+# First look
+
+![First look](https://github.com/juliolopeztorres/fingerprint-test-android/blob/master/first-look.gif)
+
 # Usage
 
 Clone the repo and play on Android Studio
