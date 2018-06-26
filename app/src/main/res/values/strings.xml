@@ -20,7 +20,10 @@
     <string name="main_empty_username_password_dialog_message">You must enter a valid username/password</string>
     <string name="main_low_android_version_dialog_message">Android version should be higher than/equals to Marshmallow (6)</string>
     <string name="main_fingerprint_permission_missing_dialog_message">You should grant Fingerprint permission to this app in order to log in with your fingerprint</string>
+    <string name="main_fingerprint_permission_missing_not_granted_dialog_message">You should grant Fingerprint permission to this app in order to log in with your fingerprint. Continuing with fallback methods</string>
     <string name="main_no_fingerprint_device_dialog_message">Your hardware does not have any fingerprint sensor. You cannot use this feature</string>
-    <string name="main_no_secure_lockscreen_set_dialog_message">In order to use fingerprint sensor login, your lock screen should be secure (i.e.: Add a pattern)</string>
+    <string name="main_no_secure_lockScreen_set_dialog_message">In order to use fingerprint sensor login, your lock screen should be secure (i.e.: Add a pattern)</string>
     <string name="main_regular_register_dialog_message">Proceed to register via regular form (without keystore)</string>
+    <string name="main_fingerprint_grant_permission_btn_label">Ask for permission</string>
+    <string name="main_no_fingerprints_enrolled_dialog_message">You should at least enroll one fingerprint into the System</string>
 </resources>

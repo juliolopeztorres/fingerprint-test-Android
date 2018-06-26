@@ -1,13 +1,12 @@
 package oob.fingerprinttest.Data.Main.CheckFingerprintSensorUseCase;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 
 import oob.fingerprinttest.Data.Main.FingerprintDependenciesWrapper;
 import oob.fingerprinttest.Domain.Main.CheckFingerprintSensorUseCase.CheckFingerprintSensorUseCaseRepositoryInterface;
@@ -21,7 +20,6 @@ public class CheckFingerprintSensorUseCaseRepository implements CheckFingerprint
     }
 
     @Override
-    @TargetApi(Build.VERSION_CODES.M)
     public void check(FingerprintSensorCallback callback) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             callback.onAndroidVersionLowerThanMarshmallow();
@@ -33,20 +31,30 @@ public class CheckFingerprintSensorUseCaseRepository implements CheckFingerprint
             return;
         }
 
-        KeyguardManager keyguardManager = FingerprintDependenciesWrapper.getKeyguardManager();
+        KeyguardManager keyguardManager = (KeyguardManager) this.context.getSystemService(Context.KEYGUARD_SERVICE);
 
         if (keyguardManager == null || !keyguardManager.isKeyguardSecure()) {
             callback.onLockScreenNotSecured();
             return;
         }
 
-        FingerprintManager fingerprintManager = FingerprintDependenciesWrapper.getFingerprintManager();
+        FingerprintManagerCompat fingerprintManager = FingerprintManagerCompat.from(this.context);
 
-        if (fingerprintManager == null || !fingerprintManager.isHardwareDetected()) {
+        if (!fingerprintManager.isHardwareDetected()) {
             callback.onHardwareNotDetected();
             return;
         }
 
+        if (!fingerprintManager.hasEnrolledFingerprints()) {
+            callback.onNoFingerprintsEnrolled();
+            return;
+        }
+
         callback.onFingerprintSensorDetected();
+    }
+
+    @Override
+    public void initFingerprintDependencies() {
+        FingerprintDependenciesWrapper.init(this.context);
     }
 }

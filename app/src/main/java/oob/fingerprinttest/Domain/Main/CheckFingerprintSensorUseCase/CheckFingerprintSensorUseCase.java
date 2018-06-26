@@ -37,6 +37,12 @@ public class CheckFingerprintSensorUseCase implements CheckFingerprintSensorUseC
 
     @Override
     public void onFingerprintSensorDetected() {
+        this.repository.initFingerprintDependencies();
         this.view.showFingerprintSensorIconReady();
+    }
+
+    @Override
+    public void onNoFingerprintsEnrolled() {
+        this.view.showNoFingerprintsEnrolledWarning();
     }
 }

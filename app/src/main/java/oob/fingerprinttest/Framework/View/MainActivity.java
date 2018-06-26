@@ -1,9 +1,16 @@
 package oob.fingerprinttest.Framework.View;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,6 +29,7 @@ import oob.fingerprinttest.Domain.Main.LoginWithFingerprintUseCase.LoginWithFing
 import oob.fingerprinttest.Domain.Main.LoginWithFingerprintUseCase.LoginWithFingerprintUseCaseViewInterface;
 import oob.fingerprinttest.Domain.Main.RegisterUseCase.RegisterUseCase;
 import oob.fingerprinttest.Domain.Main.RegisterUseCase.RegisterUseCaseViewInterface;
+import oob.fingerprinttest.Framework.ApplicationContext;
 import oob.fingerprinttest.Framework.Util.DialogUtil;
 import oob.fingerprinttest.R;
 
@@ -29,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements
         CheckFingerprintSensorUseCaseViewInterface,
         RegisterUseCaseViewInterface,
         LoginWithFingerprintUseCaseViewInterface,
-        CheckUsernameStoredUseCaseViewInterface {
+        CheckUsernameStoredUseCaseViewInterface, DialogInterface.OnClickListener {
 
     @BindView(R.id.usernameET)
     EditText usernameET;
@@ -199,9 +207,11 @@ public class MainActivity extends AppCompatActivity implements
     public void showPermissionNotGrantedWarning() {
         DialogUtil.showAlertDialog(
                 this.getContext(),
-                this.getString(R.string.main_error_dialog_title),
+                this.getString(R.string.main_warning_dialog_title),
                 this.getString(R.string.main_fingerprint_permission_missing_dialog_message),
-                this.getString(android.R.string.ok)
+                this.getString(R.string.main_fingerprint_grant_permission_btn_label),
+                this,
+                true
         );
     }
 
@@ -220,7 +230,7 @@ public class MainActivity extends AppCompatActivity implements
         DialogUtil.showAlertDialog(
                 this.getContext(),
                 this.getString(R.string.main_error_dialog_title),
-                this.getString(R.string.main_no_secure_lockscreen_set_dialog_message),
+                this.getString(R.string.main_no_secure_lockScreen_set_dialog_message),
                 this.getString(android.R.string.ok)
         );
     }
@@ -236,8 +246,50 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    @Override
+    public void showNoFingerprintsEnrolledWarning() {
+        DialogUtil.showAlertDialog(
+                this.getContext(),
+                this.getString(R.string.main_warning_dialog_title),
+                this.getString(R.string.main_no_fingerprints_enrolled_dialog_message),
+                this.getString(android.R.string.ok)
+        );
+    }
+
     private void clearInputs() {
         this.usernameET.setText("");
         this.passwordET.setText("");
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.M)
+    public void onClick(DialogInterface dialog, int which) {
+        ActivityCompat.requestPermissions(MainActivity.this,
+                new String[]{Manifest.permission.USE_FINGERPRINT},
+                ApplicationContext.FINGERPRINT_PERMISSION_REQUEST_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == ApplicationContext.FINGERPRINT_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Recheck the rest of conditions
+                this.checkFingerprintSensorUseCase.check();
+            } else {
+                this.showFingerprintPermissionNotGrantedWarning();
+            }
+            return;
+        }
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    private void showFingerprintPermissionNotGrantedWarning() {
+        DialogUtil.showAlertDialog(
+                this.getContext(),
+                this.getString(R.string.main_warning_dialog_title),
+                this.getString(R.string.main_fingerprint_permission_missing_not_granted_dialog_message),
+                this.getString(android.R.string.ok)
+        );
     }
 }

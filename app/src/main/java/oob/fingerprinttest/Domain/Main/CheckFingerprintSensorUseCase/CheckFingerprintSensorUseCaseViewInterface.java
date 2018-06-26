@@ -14,4 +14,6 @@ public interface CheckFingerprintSensorUseCaseViewInterface {
     void showLockScreenNotSecuredWarning();
 
     void showFingerprintSensorIconReady();
+
+    void showNoFingerprintsEnrolledWarning();
 }

@@ -3,8 +3,8 @@ package oob.fingerprinttest.Data.Main.LoginWithFingerprintUseCase;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
+import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 
 import oob.fingerprinttest.Data.Main.FingerprintDependenciesWrapper;
 import oob.fingerprinttest.Data.Main.FingerprintListener;
@@ -32,7 +32,7 @@ public class LoginWithFingerprintUseCaseRepository implements LoginWithFingerpri
 
     @Override
     @TargetApi(Build.VERSION_CODES.M)
-    public void authenticationSucceeded(FingerprintManager.AuthenticationResult result) {
+    public void authenticationSucceeded(FingerprintManagerCompat.AuthenticationResult result) {
         this.callback.onListenerResult();
 
         String username = this.sharedPreferences.getString(ApplicationContext.USERNAME_KEY, null);
