@@ -3,6 +3,8 @@ package oob.fingerprinttest.Domain.Main.CheckFingerprintSensorUseCase;
 public interface CheckFingerprintSensorUseCaseRepositoryInterface {
     void check(FingerprintSensorCallback callback);
 
+    void initFingerprintDependencies();
+
     interface FingerprintSensorCallback {
         void onAndroidVersionLowerThanMarshmallow();
 
@@ -13,5 +15,7 @@ public interface CheckFingerprintSensorUseCaseRepositoryInterface {
         void onLockScreenNotSecured();
 
         void onFingerprintSensorDetected();
+
+        void onNoFingerprintsEnrolled();
     }
 }

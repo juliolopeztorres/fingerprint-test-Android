@@ -1,12 +1,12 @@
 package oob.fingerprinttest.Data.Main;
 
 import android.annotation.TargetApi;
-import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
-import android.os.CancellationSignal;
+import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
+import android.support.v4.os.CancellationSignal;
 
 @TargetApi(Build.VERSION_CODES.M)
-public class FingerprintListener extends FingerprintManager.AuthenticationCallback {
+public class FingerprintListener extends FingerprintManagerCompat.AuthenticationCallback {
     private ListenerCallback callback;
     private CancellationSignal cancellationSignal;
 
@@ -14,11 +14,11 @@ public class FingerprintListener extends FingerprintManager.AuthenticationCallba
         this.callback = callback;
     }
 
-    public void startAuth(FingerprintManager manager, FingerprintManager.CryptoObject cryptoObject) {
+    public void startAuth(FingerprintManagerCompat manager, FingerprintManagerCompat.CryptoObject cryptoObject) {
         this.cancellationSignal = new CancellationSignal();
 
         try {
-            manager.authenticate(cryptoObject, this.cancellationSignal, 0, this, null);
+            manager.authenticate(cryptoObject, 0, this.cancellationSignal, this, null);
         } catch (SecurityException ex) {
             this.callback.authenticationFailed(ex.getMessage());
         } catch (Exception ex) {
@@ -48,12 +48,12 @@ public class FingerprintListener extends FingerprintManager.AuthenticationCallba
     }
 
     @Override
-    public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult result) {
+    public void onAuthenticationSucceeded(FingerprintManagerCompat.AuthenticationResult result) {
         this.callback.authenticationSucceeded(result);
     }
 
     public interface ListenerCallback {
-        void authenticationSucceeded(FingerprintManager.AuthenticationResult result);
+        void authenticationSucceeded(FingerprintManagerCompat.AuthenticationResult result);
 
         void authenticationFailed(String error);
     }

@@ -4,11 +4,11 @@ import android.annotation.TargetApi;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyPermanentlyInvalidatedException;
 import android.security.keystore.KeyProperties;
+import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 import android.util.Base64;
 
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class FingerprintDependenciesWrapper {
     private static final String KEYSTORE = "AndroidKeyStore";
 
     private static KeyguardManager keyguardManager;
-    private static FingerprintManager fingerprintManager;
+    private static FingerprintManagerCompat fingerprintManager;
 
     private static KeyStore keyStore;
     private static Cipher cipher;
@@ -40,15 +40,11 @@ public class FingerprintDependenciesWrapper {
 
     public static void init(Context context) {
         keyguardManager = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
-        fingerprintManager = (FingerprintManager) context.getSystemService(Context.FINGERPRINT_SERVICE);
+        fingerprintManager = FingerprintManagerCompat.from(context);
         sharedPreferences = context.getSharedPreferences(ApplicationContext.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
 
-    public static KeyguardManager getKeyguardManager() {
-        return keyguardManager;
-    }
-
-    public static FingerprintManager getFingerprintManager() {
+    public static FingerprintManagerCompat getFingerprintManager() {
         return fingerprintManager;
     }
 
@@ -79,13 +75,13 @@ public class FingerprintDependenciesWrapper {
         return null;
     }
 
-    public static FingerprintManager.CryptoObject getCryptoObjectForEncrypting() {
+    public static FingerprintManagerCompat.CryptoObject getCryptoObjectForEncrypting() {
         if (!getCipherForEncrypting()) {
             return null;
         }
 
         try {
-            return new FingerprintManager.CryptoObject(cipher);
+            return new FingerprintManagerCompat.CryptoObject(cipher);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -93,13 +89,13 @@ public class FingerprintDependenciesWrapper {
         return null;
     }
 
-    public static FingerprintManager.CryptoObject getCryptoObjectForDecrypting() {
+    public static FingerprintManagerCompat.CryptoObject getCryptoObjectForDecrypting() {
         if (!getCipherForDecrypting()) {
             return null;
         }
 
         try {
-            return new FingerprintManager.CryptoObject(cipher);
+            return new FingerprintManagerCompat.CryptoObject(cipher);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -179,8 +175,8 @@ public class FingerprintDependenciesWrapper {
                 ).apply();
             } else {
                 byte[] iv = Base64.decode(sharedPreferences.getString(ApplicationContext.PREFERENCES_IV_KEY, ""), Base64.NO_WRAP);
-                IvParameterSpec ivspec = new IvParameterSpec(iv);
-                cipher.init(mode, keySpec, ivspec);
+                IvParameterSpec ivSpec = new IvParameterSpec(iv);
+                cipher.init(mode, keySpec, ivSpec);
             }
 
             return true;
@@ -205,6 +201,5 @@ public class FingerprintDependenciesWrapper {
 
     private static boolean prepareAndGetCipher() {
         return getKeyStore() && createNewKey(false) && getCipher();
-
     }
 }
